@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bike_analyzer"
+version = "0.1.0"
+description = "Comparative analysis of Casual vs Registered bike users"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas",
+    "seaborn",
+    "matplotlib",
+    "scikit-learn"
+]
+
+[project.scripts]
+bike-analysis = "bike_analyzer.__main__:main"
