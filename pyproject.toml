@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "bike_analyzer"
 version = "0.1.0"
-description = "Comparative analysis of Casual vs Registered bike users"
+description = "Bike Sharing Analysis: environmental impact on total rental bikes"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
