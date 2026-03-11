@@ -28,5 +28,6 @@ class BikeModel:
         return "Model trained successfully!"
 
     def predict_demand(self, temp, hum, wind):
-        """Predicts rentals based on input conditions."""
-        return self.model.predict([[temp, hum, wind]])[0]
+        """Predicts rentals with feature names to avoid warnings."""
+        query = pd.DataFrame([[temp, hum, wind]], columns=['temp', 'hum', 'windspeed'])
+        return self.model.predict(query)[0]
