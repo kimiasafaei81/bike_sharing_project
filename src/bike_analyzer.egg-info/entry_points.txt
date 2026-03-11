@@ -1,0 +1,2 @@
+[console_scripts]
+bike-analysis = bike_analyzer.__main__:main
