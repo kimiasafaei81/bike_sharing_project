@@ -1,54 +1,41 @@
-import pandas as pd
-import os
 import sys
-import seaborn as sns
-import matplotlib.pyplot as plt
+from .data_manager import BikeData
+from .model import BikeModel
+from .plotter import BikePlotter
+
 
 def main():
-    """
-    Main entry point for the Bike Sharing Analysis project.
-    Focuses on environmental impact on total rental counts.
-    """
-    print("--- 🚲 Bike Sharing Analysis: Weather & Demand ---")
+    print("--- 🚲 Bike Sharing Analysis: Professional OOP Version ---")
 
-    # 1. Define paths using os.path
-    # base_dir is the root of your project
-    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-    data_path = os.path.join(base_dir, "hour.csv")
+    try:
+        # 1. Initialize and Load Data
+        data_engine = BikeData("hour.csv")
+        df = data_engine.load_data()
 
-    # Check if data file exists
-    if not os.path.exists(data_path):
-        print(f"Error: Dataset not found at {data_path}")
+        # 2. Analysis & Machine Learning
+        analyst = BikeModel(df)
+
+        # Weather Stats
+        print("\nAverage rentals by weather condition:")
+        print(analyst.get_weather_stats())
+
+        # ML Training
+        print(f"\n{analyst.train_prediction_model()}")
+
+        # Example Prediction (Temp=0.6, Hum=0.5, Wind=0.1)
+        pred = analyst.predict_demand(0.6, 0.5, 0.1)
+        print(f"Prediction for given conditions: {int(pred)} bikes")
+
+        # 3. Visualization
+        # Using data_engine.base_dir to save the plot in the root folder
+        visualizer = BikePlotter(df, data_engine.base_dir)
+        path = visualizer.plot_weather_impact()
+        print(f"\n✅ Visualization generated and saved to: {path}")
+
+    except Exception as e:
+        print(f"❌ An error occurred: {e}")
         sys.exit(1)
 
-    # Load the dataset
-    df = pd.read_csv(data_path)
-    print("Dataset loaded successfully.\n")
-
-    # 2. Analysis
-    weather_group = df.groupby('weathersit')['cnt'].mean()
-    print("Average hourly rentals by weather condition:")
-    print(weather_group)
-
-    temp_correlation = df['temp'].corr(df['cnt'])
-    print(f"\nCorrelation between Temp and Total Rentals: {temp_correlation:.4f}")
-
-    if temp_correlation > 0.3:
-        print("Insight: Significant positive correlation between temperature and demand.")
-
-    # 3. Visualization
-    print("\nGenerating visualization...")
-    plt.figure(figsize=(10, 6))
-    sns.regplot(data=df, x='temp', y='cnt', scatter_kws={'alpha': 0.1}, line_kws={'color': 'red'})
-    plt.title('Impact of Temperature on Bike Rentals')
-    plt.xlabel('Normalized Temperature')
-    plt.ylabel('Total Rentals')
-
-    # 4. Save the plot correctly using os.path
-    # We use base_dir which is already defined above
-    plot_path = os.path.join(base_dir, "weather_impact.png")
-    plt.savefig(plot_path)
-    print(f"Plot saved to: {plot_path}")
 
 if __name__ == "__main__":
     main()
