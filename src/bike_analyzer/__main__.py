@@ -26,6 +26,28 @@ def main():
         pred = analyst.predict_demand(0.6, 0.5, 0.1)
         print(f"Prediction for given conditions: {int(pred)} bikes")
 
+        # 3. Interactive Prediction
+        print("\n--- 🧠 Predictive System ---")
+        print("Please enter the conditions to predict hourly rentals:")
+
+        try:
+            # getting input
+            u_temp = float(input("Enter Normalized Temperature (0.0 to 1.0): "))
+            u_hum = float(input("Enter Normalized Humidity (0.0 to 1.0): "))
+            u_wind = float(input("Enter Normalized Windspeed (0.0 to 1.0): "))
+
+            # prediction
+            user_pred = analyst.predict_demand(u_temp, u_hum, u_wind)
+
+            print(f"\n🔮 Prediction Results:")
+            print(f"For Temp:{u_temp}, Hum:{u_hum}, Wind:{u_wind}")
+            print(f"👉 Estimated Hourly Rentals: {int(user_pred)} bikes")
+
+        except ValueError:
+            print("❌ Invalid input! Please enter numbers only.")
+
+
+
         # 3. Visualization
         # Using data_engine.base_dir to save the plot in the root folder
         visualizer = BikePlotter(df, data_engine.base_dir)
