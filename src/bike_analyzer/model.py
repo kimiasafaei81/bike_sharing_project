@@ -31,3 +31,11 @@ class BikeModel:
         """Predicts rentals with feature names to avoid warnings."""
         query = pd.DataFrame([[temp, hum, wind]], columns=['temp', 'hum', 'windspeed'])
         return self.model.predict(query)[0]
+
+    def evaluate_model(self):
+        """Calculates the accuracy (R-squared) of the trained model."""
+        X = self.df[['temp', 'hum', 'windspeed']]
+        y = self.df['cnt']
+
+        score = self.model.score(X, y)
+        return score

@@ -5,7 +5,7 @@ from .plotter import BikePlotter
 
 
 def main():
-    print("--- 🚲 Bike Sharing Analysis: Professional OOP Version ---")
+    print("--- 🚲 Bike Sharing Analysis")
 
     try:
         # 1. Initialize and Load Data
@@ -45,6 +45,11 @@ def main():
 
         except ValueError:
             print("❌ Invalid input! Please enter numbers only.")
+
+        # Display Accuracy
+        accuracy = analyst.evaluate_model()
+        print(f"\n📊 Model Accuracy (R² Score): {accuracy:.4f}")
+        print(f"Interpretation: {accuracy * 100:.1f}% of variance explained.")
 
 
 
