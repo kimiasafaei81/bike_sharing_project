@@ -23,33 +23,32 @@ def main():
         print(f"\n{analyst.train_prediction_model()}")
 
         # Example Prediction (Temp=0.6, Hum=0.5, Wind=0.1)
-        pred = analyst.predict_demand(0.6, 0.5, 0.1)
-        print(f"Prediction for given conditions: {int(pred)} bikes")
+        #pred = analyst.predict_demand(0.6, 0.5, 0.1)
+        #print(f"Prediction for given conditions: {int(pred)} bikes")
 
         # 3. Interactive Prediction
         print("\n--- 🧠 Predictive System ---")
         print("Please enter the conditions to predict hourly rentals:")
 
-        try:
-            # getting input
-            u_temp = float(input("Enter Normalized Temperature (0.0 to 1.0): "))
-            u_hum = float(input("Enter Normalized Humidity (0.0 to 1.0): "))
-            u_wind = float(input("Enter Normalized Windspeed (0.0 to 1.0): "))
+        while True:
+            try:
+                print("\n--- Input Data ---")
+                u_hr = int(input("👉 Hour (0-23): "))
+                u_temp = float(input("👉 Normalized Temp (0.0-1.0): "))
+                u_hum = float(input("👉 Normalized Humidity (0.0-1.0): "))
+                u_wind = float(input("👉 Normalized Windspeed (0.0-1.0): "))
+                u_work = int(input("👉 Working Day? (1 for Yes, 0 for No/Weekend): "))
 
-            # prediction
-            user_pred = analyst.predict_demand(u_temp, u_hum, u_wind)
+                user_pred = analyst.predict_demand(u_hr, u_temp, u_hum, u_wind, u_work)
 
-            print(f"\n🔮 Prediction Results:")
-            print(f"For Temp:{u_temp}, Hum:{u_hum}, Wind:{u_wind}")
-            print(f"👉 Estimated Hourly Rentals: {int(user_pred)} bikes")
+                print(f"\n🔮 Prediction Result: {int(user_pred)} bikes/hour")
 
-        except ValueError:
-            print("❌ Invalid input! Please enter numbers only.")
+                accuracy = analyst.evaluate_model()
+                print(f"📊 New Model Accuracy (R²): {accuracy:.4f}")
+                break
 
-        # Display Accuracy
-        accuracy = analyst.evaluate_model()
-        print(f"\n📊 Model Accuracy (R² Score): {accuracy:.4f}")
-        print(f"Interpretation: {accuracy * 100:.1f}% of variance explained.")
+            except ValueError:
+                print("❌ Invalid input! Please use numbers.")
 
 
 

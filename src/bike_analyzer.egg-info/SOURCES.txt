@@ -1,5 +1,8 @@
 pyproject.toml
 src/bike_analyzer/__main__.py
+src/bike_analyzer/data_manager.py
+src/bike_analyzer/model.py
+src/bike_analyzer/plotter.py
 src/bike_analyzer.egg-info/PKG-INFO
 src/bike_analyzer.egg-info/SOURCES.txt
 src/bike_analyzer.egg-info/dependency_links.txt

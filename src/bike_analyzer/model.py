@@ -19,23 +19,27 @@ class BikeModel:
         return self.df['temp'].corr(self.df['cnt'])
 
     def train_prediction_model(self):
-        """Trains a simple linear regression model."""
-        X = self.df[['temp', 'hum', 'windspeed']]
+        """Trains a linear regression model with temporal and weather features."""
+        features = ['hr', 'temp', 'hum', 'windspeed', 'workingday']
+        X = self.df[features]
         y = self.df['cnt']
 
+        from sklearn.model_selection import train_test_split
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-        self.model.fit(X_train, y_train)
-        return "Model trained successfully!"
 
-    def predict_demand(self, temp, hum, wind):
-        """Predicts rentals with feature names to avoid warnings."""
-        query = pd.DataFrame([[temp, hum, wind]], columns=['temp', 'hum', 'windspeed'])
+        self.model.fit(X_train, y_train)
+        return "✅ Model trained with Temporal & Weather features!"
+
+    def predict_demand(self, hr, temp, hum, wind, workingday):
+        """Predicts rentals based on 5 features."""
+        import pandas as pd
+        query = pd.DataFrame([[hr, temp, hum, wind, workingday]],
+                             columns=['hr', 'temp', 'hum', 'windspeed', 'workingday'])
         return self.model.predict(query)[0]
 
     def evaluate_model(self):
-        """Calculates the accuracy (R-squared) of the trained model."""
-        X = self.df[['temp', 'hum', 'windspeed']]
+        """Returns the R-squared score using the updated feature set."""
+        features = ['hr', 'temp', 'hum', 'windspeed', 'workingday']
+        X = self.df[features]
         y = self.df['cnt']
-
-        score = self.model.score(X, y)
-        return score
+        return self.model.score(X, y)
