@@ -59,5 +59,20 @@ def main():
     p4 = viz_manager.plot_actual_vs_predicted(y_actual, y_predicted)
     print(f"✅ Accuracy check saved: {p4}")
 
+    #Interactive Prediction
+    print("\n🔮 --- Manual Prediction ---")
+    try:
+        hr = int(input("Enter hour (0-23): "))
+        temp = float(input("Enter normalized temperature (0-1): "))
+        hum = float(input("Enter humidity (0-1): "))
+        wind = float(input("Enter windspeed (0-1): "))
+        workingday = int(input("Working day? (1 for Yes, 0 for No): "))
+
+        prediction = analyst.predict_demand(hr, temp, hum, wind, workingday)
+        print(f"\n✨ Predicted Bike Demand: {int(prediction)} bikes")
+
+    except ValueError:
+        print("❌ Invalid input! Please enter numbers only.")
+
 if __name__ == "__main__":
     main()
