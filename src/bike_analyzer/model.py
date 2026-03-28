@@ -8,8 +8,20 @@ class BikeModel:
     """Handles all statistical analysis and machine learning."""
 
     def __init__(self, data):
-            self.df = data
-            self.model = RandomForestRegressor(n_estimators=100, random_state=42)
+        self.df = data
+        self.features = ['hr', 'temp', 'hum', 'windspeed', 'workingday']
+        self.model = RandomForestRegressor(n_estimators=100, random_state=42)
+
+    def get_test_predictions(self):
+        """Returns actual and predicted values for the test set."""
+        X = self.df[self.features]
+        y = self.df['cnt']
+
+        from sklearn.model_selection import train_test_split
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        y_pred = self.model.predict(X_test)
+        return y_test, y_pred
 
     def get_weather_stats(self):
         """Calculates mean rentals by weather condition."""
@@ -44,3 +56,11 @@ class BikeModel:
         X = self.df[features]
         y = self.df['cnt']
         return self.model.score(X, y)
+
+    def get_test_predictions(self):
+        """Returns actual and predicted values for the test set."""
+        X = self.df[self.features]
+        y = self.df['cnt']
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        y_pred = self.model.predict(X_test)
+        return y_test, y_pred

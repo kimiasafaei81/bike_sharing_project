@@ -1,67 +1,63 @@
 import sys
-from .data_manager import BikeData
-from .model import BikeModel
-from .plotter import BikePlotter
-
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+from bike_analyzer.model import BikeModel
+try:
+    from bike_analyzer.plotter import BikePlotter
+except ImportError:
+    print("❌ Error: Could not find BikePlotter class. Make sure plotter.py exists.")
+    sys.exit(1)
 
 def main():
-    print("--- 🚲 Bike Sharing Analysis")
+    print("--- 🚲 Bike Sharing Analysis: Weather & Demand ---")
+
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    base_dir = os.path.abspath(os.path.join(current_dir, "../../../"))
+    data_path = os.path.join(base_dir, "hour.csv")
+
+    if not os.path.exists(data_path):
+        data_path = "hour.csv"
 
     try:
-        # 1. Initialize and Load Data
-        data_engine = BikeData("hour.csv")
-        df = data_engine.load_data()
-
-        # 2. Analysis & Machine Learning
-        analyst = BikeModel(df)
-
-        # Weather Stats
-        print("\nAverage rentals by weather condition:")
-        print(analyst.get_weather_stats())
-
-        # ML Training
-        print(f"\n{analyst.train_prediction_model()}")
-
-        # Example Prediction (Temp=0.6, Hum=0.5, Wind=0.1)
-        #pred = analyst.predict_demand(0.6, 0.5, 0.1)
-        #print(f"Prediction for given conditions: {int(pred)} bikes")
-
-        # 3. Interactive Prediction
-        print("\n--- 🧠 Predictive System ---")
-        print("Please enter the conditions to predict hourly rentals:")
-
-        while True:
-            try:
-                print("\n--- Input Data ---")
-                u_hr = int(input("👉 Hour (0-23): "))
-                u_temp = float(input("👉 Normalized Temp (0.0-1.0): "))
-                u_hum = float(input("👉 Normalized Humidity (0.0-1.0): "))
-                u_wind = float(input("👉 Normalized Windspeed (0.0-1.0): "))
-                u_work = int(input("👉 Working Day? (1 for Yes, 0 for No/Weekend): "))
-
-                user_pred = analyst.predict_demand(u_hr, u_temp, u_hum, u_wind, u_work)
-
-                print(f"\n🔮 Prediction Result: {int(user_pred)} bikes/hour")
-
-                accuracy = analyst.evaluate_model()
-                print(f"📊 New Model Accuracy (R²): {accuracy:.4f}")
-                break
-
-            except ValueError:
-                print("❌ Invalid input! Please use numbers.")
-
-
-
-        # 3. Visualization
-        # Using data_engine.base_dir to save the plot in the root folder
-        visualizer = BikePlotter(df, data_engine.base_dir)
-        path = visualizer.plot_weather_impact()
-        print(f"\n✅ Visualization generated and saved to: {path}")
-
+        df = pd.read_csv(data_path)
+        print(f"✅ Dataset loaded successfully from: {data_path}\n")
     except Exception as e:
-        print(f"❌ An error occurred: {e}")
+        print(f"❌ Error loading CSV: {e}")
         sys.exit(1)
 
+
+    weather_group = df.groupby('weathersit')['cnt'].mean()
+    print("Average hourly rentals by weather condition:")
+    print(weather_group)
+
+
+    viz_manager = BikePlotter(df, save_dir=os.getcwd())
+
+    print("\n📊 Generating and Saving Plots (PNG)...")
+    try:
+        p1 = viz_manager.plot_weather_impact()
+        p2 = viz_manager.plot_hourly_trend()
+        p3 = viz_manager.plot_workingday_comparison()
+
+        print(f"✅ Saved: {p1}")
+        print(f"✅ Saved: {p2}")
+        print(f"✅ Saved: {p3}")
+    except AttributeError as e:
+        print(f"❌ Plotting Error: {e}")
+        print("Tip: Make sure all methods (like plot_hourly_trend) are defined in plotter.py")
+
+    print("\n🤖 Training Model...")
+    analyst = BikeModel(df)
+    print(analyst.train_prediction_model())
+
+    accuracy = analyst.evaluate_model()
+    print(f"📊 Model Accuracy (R²): {accuracy:.4f}")
+    print("📈 Generating Accuracy Plot...")
+    y_actual, y_predicted = analyst.get_test_predictions()
+    p4 = viz_manager.plot_actual_vs_predicted(y_actual, y_predicted)
+    print(f"✅ Accuracy check saved: {p4}")
 
 if __name__ == "__main__":
     main()
