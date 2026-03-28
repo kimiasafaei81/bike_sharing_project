@@ -7,12 +7,13 @@ name = "bike_analyzer"
 version = "0.1.0"
 description = "Bike Sharing Analysis: environmental impact on total rental bikes"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
-    "pandas",
-    "seaborn",
-    "matplotlib",
-    "scikit-learn"
+    "matplotlib>=3.10.0",
+    "numpy>=2.0.0",
+    "pandas>=2.2.0",
+    "scikit-learn>=1.5.0",
+    "seaborn>=0.13.0",
 ]
 
 [project.scripts]
