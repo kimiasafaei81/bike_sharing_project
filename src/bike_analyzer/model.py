@@ -1,14 +1,15 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
 
 
 class BikeModel:
     """Handles all statistical analysis and machine learning."""
 
     def __init__(self, data):
-        self.df = data
-        self.model = LinearRegression()
+            self.df = data
+            self.model = RandomForestRegressor(n_estimators=100, random_state=42)
 
     def get_weather_stats(self):
         """Calculates mean rentals by weather condition."""
