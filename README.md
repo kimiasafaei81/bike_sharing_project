@@ -9,7 +9,7 @@ This project uses Machine Learning to answer a critical business question: *How 
 ---
 ## 🚀 How to Run
 You can run the analysis using the following command:
-``bash
+```bash
 uv run -m bike_analyzer
 (Or simply bike-analysis if installed via pip).
 
