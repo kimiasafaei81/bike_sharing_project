@@ -7,6 +7,14 @@ Predicting the demand for bike rentals is a complex challenge because it's influ
 This project uses Machine Learning to answer a critical business question: *How many bikes will be needed in a specific hour, given the weather and the day of the week?* By analyzing thousands of data points, we've built a system that helps bike-sharing providers optimize their fleet distribution, ensuring bikes are available when and where people need them most.
 
 ---
+## 🚀 How to Run
+You can run the analysis using the following command:
+``bash
+uv run -m bike_analyzer
+(Or simply bike-analysis if installed via pip).
+
+
+---
 
 ## 📊 About the Data
 We utilized the **UCI Bike Sharing Dataset**, which contains hourly rental counts linked to:
