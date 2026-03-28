@@ -11,7 +11,10 @@ This project uses Machine Learning to answer a critical business question: *How 
 You can run the analysis using the following command:
 ```bash
 uv run -m bike_analyzer
-(Or simply bike-analysis if installed via pip).
+```
+(Or simply
+```bash bike-analysis ```
+if installed via pip).
 
 
 ---
