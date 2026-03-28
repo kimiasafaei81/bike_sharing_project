@@ -4,28 +4,40 @@ import os
 
 
 class BikePlotter:
-    """Handles all graphical visualizations for the bike project."""
-
-    def __init__(self, df, save_dir):
-        self.df = df
+    def __init__(self, data, save_dir="."):
+        self.df = data
         self.save_dir = save_dir
+        sns.set_theme(style="whitegrid")
 
     def plot_weather_impact(self):
-        """Creates and saves a regression plot for temperature vs demand."""
+        """1. Regression Plot: Temp vs Count"""
         plt.figure(figsize=(10, 6))
-        sns.regplot(
-            data=self.df,
-            x='temp',
-            y='cnt',
-            scatter_kws={'alpha': 0.1},
-            line_kws={'color': 'red'}
-        )
+        sns.regplot(data=self.df, x='temp', y='cnt', scatter_kws={'alpha': 0.1}, line_kws={'color': 'red'})
         plt.title('Impact of Temperature on Bike Rentals')
-        plt.xlabel('Normalized Temperature')
-        plt.ylabel('Total Rentals')
 
-        # Define the full path for the output image
-        save_path = os.path.join(self.save_dir, "weather_impact.png")
-        plt.savefig(save_path)
-        plt.close()  # Close the plot to free up memory
-        return save_path
+        path = os.path.join(self.save_dir, "weather_impact.png")
+        plt.savefig(path, dpi=300)
+        plt.close()
+        return path
+
+    def plot_hourly_trend(self):
+        """2. Bar Plot: Hourly Trend"""
+        plt.figure(figsize=(12, 6))
+        sns.barplot(data=self.df, x='hr', y='cnt', palette='viridis')
+        plt.title('Average Hourly Bike Rentals')
+
+        path = os.path.join(self.save_dir, "hourly_trend.png")
+        plt.savefig(path, dpi=300)
+        plt.close()
+        return path
+
+    def plot_workingday_comparison(self):
+        """3. Box Plot: Working Day vs Weekend"""
+        plt.figure(figsize=(8, 6))
+        sns.boxplot(data=self.df, x='workingday', y='cnt', palette='Set2')
+        plt.title('Rentals: Working Day (1) vs Weekend/Holiday (0)')
+
+        path = os.path.join(self.save_dir, "workingday_comparison.png")
+        plt.savefig(path, dpi=300)
+        plt.close()
+        return path

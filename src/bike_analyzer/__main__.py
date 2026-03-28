@@ -1,54 +1,52 @@
-import pandas as pd
-import os
 import sys
-import seaborn as sns
+import os
+import pandas as pd
 import matplotlib.pyplot as plt
 
+try:
+    from bike_analyzer.plotter import BikePlotter
+except ImportError:
+    print("❌ Error: Could not find BikePlotter class. Make sure plotter.py exists.")
+    sys.exit(1)
+
 def main():
-    """
-    Main entry point for the Bike Sharing Analysis project.
-    Focuses on environmental impact on total rental counts.
-    """
     print("--- 🚲 Bike Sharing Analysis: Weather & Demand ---")
 
-    # 1. Define paths using os.path
-    # base_dir is the root of your project
-    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    base_dir = os.path.abspath(os.path.join(current_dir, "../../../"))
     data_path = os.path.join(base_dir, "hour.csv")
 
-    # Check if data file exists
     if not os.path.exists(data_path):
-        print(f"Error: Dataset not found at {data_path}")
+        data_path = "hour.csv"
+
+    try:
+        df = pd.read_csv(data_path)
+        print(f"✅ Dataset loaded successfully from: {data_path}\n")
+    except Exception as e:
+        print(f"❌ Error loading CSV: {e}")
         sys.exit(1)
 
-    # Load the dataset
-    df = pd.read_csv(data_path)
-    print("Dataset loaded successfully.\n")
 
-    # 2. Analysis
     weather_group = df.groupby('weathersit')['cnt'].mean()
     print("Average hourly rentals by weather condition:")
     print(weather_group)
 
-    temp_correlation = df['temp'].corr(df['cnt'])
-    print(f"\nCorrelation between Temp and Total Rentals: {temp_correlation:.4f}")
 
-    if temp_correlation > 0.3:
-        print("Insight: Significant positive correlation between temperature and demand.")
+    viz_manager = BikePlotter(df, save_dir=os.getcwd())
 
-    # 3. Visualization
-    print("\nGenerating visualization...")
-    plt.figure(figsize=(10, 6))
-    sns.regplot(data=df, x='temp', y='cnt', scatter_kws={'alpha': 0.1}, line_kws={'color': 'red'})
-    plt.title('Impact of Temperature on Bike Rentals')
-    plt.xlabel('Normalized Temperature')
-    plt.ylabel('Total Rentals')
+    print("\n📊 Generating and Saving Plots (PNG)...")
+    try:
+        p1 = viz_manager.plot_weather_impact()
+        p2 = viz_manager.plot_hourly_trend()
+        p3 = viz_manager.plot_workingday_comparison()
 
-    # 4. Save the plot correctly using os.path
-    # We use base_dir which is already defined above
-    plot_path = os.path.join(base_dir, "weather_impact.png")
-    plt.savefig(plot_path)
-    print(f"Plot saved to: {plot_path}")
+        print(f"✅ Saved: {p1}")
+        print(f"✅ Saved: {p2}")
+        print(f"✅ Saved: {p3}")
+    except AttributeError as e:
+        print(f"❌ Plotting Error: {e}")
+        print("Tip: Make sure all methods (like plot_hourly_trend) are defined in plotter.py")
 
 if __name__ == "__main__":
     main()
