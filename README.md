@@ -1,5 +1,5 @@
 # 🚲 Bike Sharing Demand Prediction System
-**University of Dortmund - Data Science Project**
+**Technical University of Dortmund - ITP Project**
 
 ## 📖 Project Overview
 Predicting the demand for bike rentals is a complex challenge because it's influenced by both **environmental conditions** and **human behavior patterns**. 
