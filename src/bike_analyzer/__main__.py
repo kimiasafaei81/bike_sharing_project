@@ -2,7 +2,7 @@ import sys
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
-
+from bike_analyzer.model import BikeModel
 try:
     from bike_analyzer.plotter import BikePlotter
 except ImportError:
@@ -47,6 +47,17 @@ def main():
     except AttributeError as e:
         print(f"❌ Plotting Error: {e}")
         print("Tip: Make sure all methods (like plot_hourly_trend) are defined in plotter.py")
+
+    print("\n🤖 Training Model...")
+    analyst = BikeModel(df)
+    print(analyst.train_prediction_model())
+
+    accuracy = analyst.evaluate_model()
+    print(f"📊 Model Accuracy (R²): {accuracy:.4f}")
+    print("📈 Generating Accuracy Plot...")
+    y_actual, y_predicted = analyst.get_test_predictions()
+    p4 = viz_manager.plot_actual_vs_predicted(y_actual, y_predicted)
+    print(f"✅ Accuracy check saved: {p4}")
 
 if __name__ == "__main__":
     main()

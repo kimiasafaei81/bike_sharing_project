@@ -41,3 +41,13 @@ class BikePlotter:
         plt.savefig(path, dpi=300)
         plt.close()
         return path
+
+    def plot_actual_vs_predicted(self, y_true, y_pred):
+        plt.figure(figsize=(8, 8))
+        plt.scatter(y_true, y_pred, alpha=0.3)
+        plt.plot([y_true.min(), y_true.max()], [y_true.min(), y_true.max()], 'r--')
+        plt.title('Prediction Accuracy: Actual vs Predicted')
+        path = os.path.join(self.save_dir, "accuracy_check.png")
+        plt.savefig(path)
+        plt.close()
+        return path
